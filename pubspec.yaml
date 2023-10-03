@@ -7,8 +7,10 @@ environment:
   sdk: '>=3.0.6 <4.0.0'
 
 dependencies:
+  email_validator: ^2.1.17
   flutter:
     sdk: flutter
+  mask_text_input_formatter: ^2.5.0
 
 dev_dependencies:
   flutter_test:

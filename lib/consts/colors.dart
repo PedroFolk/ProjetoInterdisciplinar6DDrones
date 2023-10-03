@@ -10,3 +10,7 @@ var logo = Image.asset('imgs/Logo.png');
 var registrarColor = Colors.white;
 var registrarSize = 18.0;
 var registrarStyle = FontStyle.italic;
+
+var corPadrao = Colors.white;
+
+var corErroNome = Colors.red;
