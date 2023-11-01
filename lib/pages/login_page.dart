@@ -1,8 +1,13 @@
-import 'package:c6_drones_app/consts/colors.dart';
+import 'package:c6_drones_app/consts/consts.dart';
+import 'package:c6_drones_app/main.dart';
+import 'package:c6_drones_app/pages/main_page.dart';
 import 'package:c6_drones_app/pages/register_page.dart';
 import 'package:c6_drones_app/widgets/fields.dart';
+import 'package:c6_drones_app/widgets/perfil.dart';
+import 'package:dio/dio.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -293,14 +298,34 @@ class _LoginPageState extends State<LoginPage> {
 // Função entrar
   void entrar() {
     if (_formKey.currentState!.validate()) {
-      cleanControllers();
       enviarAPI();
+      cleanControllers();
     } else {
       print("Deu errado algo");
     }
   }
 
-  void enviarAPI() {}
+  Future enviarAPI() async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const MainPage()),
+    );
+
+    // var url = dotenv.env['API_URL_CREATE'];
+    // final formData = FormData.fromMap({
+    //   'email': emailController.text,
+    //   'password': passwordController.text,
+    // });
+    // try {
+    //   var response = await Dio().post(
+    //     url!,
+    //     data: formData,
+    //   );
+    //   return response.data;
+    // } catch (e) {
+    //   print(e);
+    // }
+  }
 
   void cleanControllers() {
     emailController.text = '';

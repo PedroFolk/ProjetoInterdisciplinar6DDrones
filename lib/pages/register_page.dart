@@ -1,4 +1,4 @@
-import 'package:c6_drones_app/consts/colors.dart';
+import 'package:c6_drones_app/consts/consts.dart';
 import 'package:c6_drones_app/pages/login_page.dart';
 import 'package:c6_drones_app/widgets/fields.dart';
 import 'package:email_validator/email_validator.dart';
