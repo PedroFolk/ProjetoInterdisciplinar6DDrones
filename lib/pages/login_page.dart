@@ -299,6 +299,7 @@ class _LoginPageState extends State<LoginPage> {
   void entrar() {
     if (_formKey.currentState!.validate()) {
       enviarAPI();
+
       cleanControllers();
     } else {
       print("Deu errado algo");
@@ -310,14 +311,15 @@ class _LoginPageState extends State<LoginPage> {
     users.loginUser(
       emailController.text,
       passwordController.text,
+      mudarPagina(),
     );
-    if (users.usuarioCerto == true) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const MainPage()),
-      );
-      print(users.usuarios);
-    }
+  }
+
+  void mudarPagina() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const MainPage()),
+    );
   }
 
   void cleanControllers() {

@@ -14,7 +14,7 @@ def VerificaUsuarioExiste(request):
             return JsonResponse({'mensagem': 'Este email já está cadastrado'}, status=200)
         else:
             CadastraUsuario(request)
-            return JsonResponse({'mensagem': 'Usuário não cadastrado'}, status=200)
+            return JsonResponse({'mensagem': 'Usuário não cadastrado'})
     except Exception as e:
         return JsonResponse({'mensagem': f'Erro na verificação de existência do email: {str(e)}'}, status=500)
 
@@ -32,51 +32,51 @@ def CadastraUsuario(request):
     except Exception as e:
         return JsonResponse({'mensagem': f'Erro ao cadastrar usuário no banco: {str(e)}'}, status=500)
 
-@api_view(['POST'])
+@api_view(['GET'])
 def VerificaLogin(request):
     try:
-        info = request.data
+        info = request.query_params
         usuario_existe = usuario.objects.filter(email=info['email']).first()
         if usuario_existe:
             senha = info['senha']
             if usuario_existe.senha == senha:
                 return JsonResponse({"mensagem": "Login efetuado"}) 
             else:
-                raise Exception({'mensagem': 'Email cadastrado, mas a senha está incorreta'})
+                raise Exception({'mensagem': 'Email cadastrado, mas a senha está incorreta'},status=401)
         else:
-            raise Exception({"mensagem": "Email não cadastrado no banco de dados"})
+            raise Exception({"mensagem": "Email não cadastrado no banco de dados"},status=401)
     except Exception as e:
         return JsonResponse({"mensagem": "Erro ao verificar login","error": str(e)}, status=401)
 
 @api_view(['GET'])
 def ExibeInfo(request):
     try:
-        info = request.data
+        
+        if request.method == 'GET':
+            info = request.query_params
+        else:
+            return JsonResponse({"mensagem": "Método não permitido"}, status=405)
+
         usuario_existe = usuario.objects.filter(email=info['email']).first()
         nome = usuario_existe.nome
-        email = usuario_existe.email 
-        celular = usuario_existe.celular 
+        email = usuario_existe.email
+        celular = usuario_existe.celular
         organizacao_busca = organizacao.objects.filter(idOrganizador=usuario_existe.idOrganizador_id).values('nomeOrg').first()
-        organizacao_nome = organizacao_busca['nomeOrg']
-        if organizacao_busca:
-            ResponseData = {
-                'nome': nome,
-                'email' : email,
-                'celular' : celular,
-                'organizacao_nome' : organizacao_nome
-            }
-            print(nome,email,celular,organizacao_nome)
-        else:
-            ResponseData = {
-                'nome': nome,
-                'email' : email,
-                'celular' : celular,
-            }
-            print(nome,email,celular)
+        organizacao_nome = organizacao_busca['nomeOrg'] if organizacao_busca else None
+
+        ResponseData = {
+            'nome': nome,
+            'email': email,
+            'celular': celular,
+            'organizacao_nome': organizacao_nome,
+        }
+
         return JsonResponse(ResponseData)
     except Exception as e:
-        return JsonResponse({"mensagem": "Erro ao encontrar dados de usuario","error": str(e)}, status=500)
-    
+        return JsonResponse({"mensagem": "Erro ao encontrar dados de usuario", "error": str(e)}, status=500)    
+
+
+
 @api_view(['GET'])
 def ExibeOrg(request):
     try:

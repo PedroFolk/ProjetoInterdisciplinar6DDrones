@@ -30,12 +30,12 @@ class _PerfilPageState extends State<PerfilPage> {
   void initState() {
     final users = context.read<ModelA>();
     super.initState();
-    String nome = users.usuarios[1]['nome'];
-    String email = users.usuarios[1]['email'];
-    String celular = users.usuarios[1]['celular'];
+    String nome = users.usuarios[0]['nome'];
+    String email = users.usuarios[0]['email'];
+    String celular = users.usuarios[0]['celular'];
     String celularMaskInicial =
         '(${celular[0]}${celular[1]}) ${celular.substring(2, 7)}-${celular.substring(7, 11)}';
-    String organizacao = users.usuarios[1]['organizacao'];
+    String organizacao = users.usuarios[0]['organizacao'];
 
     // Initialize the TextEditingControllers with the initial values
     nomeController = TextEditingController(text: nome);

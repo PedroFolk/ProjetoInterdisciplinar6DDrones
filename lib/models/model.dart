@@ -16,87 +16,80 @@ class ModelA extends ChangeNotifier {
   bool _expand = false;
   bool get expand => _expand;
 
-  bool _usuarioCerto = true;
-  bool get usuarioCerto => _usuarioCerto;
-
   final List<Map<String, dynamic>> _usuarios = [
     {
-      'nome': 'nome',
-      'email': 'eada',
-      'celular': '(11) 968021409',
-      'organizacao': 'dada'
+      // 'nome': 'd',
+      // 'email': 'd',
+      // 'celular': 'd',
+      // 'organizacao': 'd',
     }
   ];
   List<Map<String, dynamic>> get usuarios => _usuarios;
 
-  Future<Map<String, dynamic>> loginUser(String email, String senha) async {
-    final response = await http.post(
-      Uri.parse('http://127.0.0.1:8000/verificaLogin/'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'email': email,
-        'senha': senha,
-      }),
-    );
+  Future<Map<String, dynamic>> loginUser(
+      String email, String senha, void mudarPagina) async {
+    const apiUrl = 'http://127.0.0.1:8000/verificaLogin/';
 
-    if (response.statusCode != 200) {
-      // Handle error
-      print("Error: ${response.statusCode}");
-      return {'error': 'Failed to log in'};
-    } else {
-      _usuarioCerto = true;
-      notifyListeners();
-      final Map<String, dynamic> responseData = json.decode(response.body);
+    // Construct the URL with the email and password as query parameters
+    final url = Uri.parse('$apiUrl?email=$email&senha=$senha');
 
-      // Store responseData in _usuarios list
-      _usuarios.add({
-        'nome': responseData['nome'],
-        'email': responseData['email'],
-        'celular': responseData['celular'],
-        'organizacao_nome': responseData['organizacao_nome'] ??
-            '', // Use an empty string if key is not present
-      });
+    try {
+      final response = await http.get(url);
 
-      return responseData;
+      if (response.statusCode == 200) {
+        await getUserData(email); // Make sure to await if necessary
+        mudarPagina; // Call the function to change the page
+        notifyListeners(); // Notify listeners after making changes
+        return {}; // Return appropriate data if needed
+      } else {
+        throw Exception(
+            'Failed to load data. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Failed to connect to the server. Error: $e');
     }
   }
 
   Future<Map<String, dynamic>> getUserData(String email) async {
-    final response = await http.get(
-      Uri.parse(
-          'http://127.0.0.1:8000/exibeInfo/?email=${Uri.encodeQueryComponent(email)}'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
+    const apiUrl = 'http://127.0.0.1:8000/exibeInfo/';
 
-    if (response.statusCode == 200) {
-      var responseData = json.decode(response.body);
+    // Construct the URL with the email as a query parameter
+    final url = Uri.parse('$apiUrl?email=$email');
 
-      if (responseData.containsKey("nome")) {
+    try {
+      // Send a GET request to the server
+      final response = await http.get(url);
+
+      // Check if the response status code is 200 (OK)
+      if (response.statusCode == 200) {
+        // Parse the response body as JSON
+        var responseData = json.decode(response.body);
+
+        // Add user data to a list (assuming _usuarios is a list field in your class)
         _usuarios.add({
-          'nome': responseData["nome"],
-          'email': responseData["email"],
-          'celular': responseData["celular"],
-          'organizacao': responseData["organizacao_nome"] ?? '',
+          'nome': responseData['nome'],
+          'email': responseData['email'],
+          'celular': responseData['celular'],
+          'organizacao': responseData['organizacao_nome'] ?? '',
         });
-
         notifyListeners();
 
-        print(responseData);
-        print(usuarios);
+        // Print response data
+        print(usuarios[1]);
+        print(responseData['nome']);
+
+        // Return the response data
         return responseData;
       } else {
-        // Handle case where 'nome' key is missing
-        print("Error: 'nome' key not found in response");
-        return {};
+        // If the server did not return a 200 OK response, throw an exception.
+        throw Exception(
+            'Failed to load data. Status code: ${response.statusCode}');
       }
-    } else {
-      // Handle non-200 status code
-      print("Error: ${response.statusCode}");
-      return {};
+    } catch (e) {
+      // Handle errors during the HTTP request
+      print('Error: $e');
+      throw Exception('Failed to connect to the server. Error: $e');
     }
   }
 

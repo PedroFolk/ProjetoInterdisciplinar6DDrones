@@ -362,18 +362,11 @@ class _RegisterPageState extends State<RegisterPage> {
       passwordController.text,
       celularController.text,
     );
-    // users.criarUsuario(
-    //   nomeController.text,
-    //   emailController.text,
-    //   celularSoNumero,
-    //   passwordController.text,
-    // );
-    // print(users.usuarios);
-    // users.zerarUsuarios();
+
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: ((context) => const MainPage()),
+        builder: ((context) => const LoginPage()),
       ),
     );
   }
