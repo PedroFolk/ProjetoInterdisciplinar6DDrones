@@ -1,12 +1,12 @@
 import 'package:c6_drones_app/consts/consts.dart';
 import 'package:flutter/material.dart';
 
-class PerfilButtons extends StatefulWidget {
+class EditSaveButtons extends StatefulWidget {
   final bool editando;
   final Function funcEditar;
   final Function funcSalvar;
   final Function funcCancelar;
-  const PerfilButtons({
+  const EditSaveButtons({
     super.key,
     required this.editando,
     required this.funcEditar,
@@ -15,10 +15,10 @@ class PerfilButtons extends StatefulWidget {
   });
 
   @override
-  State<PerfilButtons> createState() => _PerfilButtonsState();
+  State<EditSaveButtons> createState() => _EditSaveButtonsState();
 }
 
-class _PerfilButtonsState extends State<PerfilButtons> {
+class _EditSaveButtonsState extends State<EditSaveButtons> {
   var corSalvar = blueC6;
   var corCancelar = blueC6;
   var corEditar = blueC6;
@@ -154,7 +154,7 @@ class _PerfilButtonsState extends State<PerfilButtons> {
                     color: corEditar,
                   ),
                   Text(
-                    "Editar Perfil",
+                    "Editar",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 18,

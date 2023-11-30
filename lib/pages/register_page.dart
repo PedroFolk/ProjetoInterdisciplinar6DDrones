@@ -1,10 +1,12 @@
 import 'package:c6_drones_app/consts/consts.dart';
+import 'package:c6_drones_app/models/model.dart';
 import 'package:c6_drones_app/pages/login_page.dart';
+import 'package:c6_drones_app/pages/main_page.dart';
 import 'package:c6_drones_app/widgets/fields.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -21,7 +23,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final nomeController = TextEditingController();
   final emailController = TextEditingController();
   final celularController = TextEditingController();
-  final enderecoController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
 
@@ -37,7 +38,6 @@ class _RegisterPageState extends State<RegisterPage> {
     nomeController.dispose();
     emailController.dispose();
     celularController.dispose();
-    enderecoController.dispose();
     passwordController.dispose();
     passwordConfirmController.dispose();
     super.dispose();
@@ -164,26 +164,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
 
                         // Espaco
-                        const SizedBox(
-                          height: 25,
-                        ),
-
-                        // // Input endereço
-                        Fields(
-                          controller: enderecoController,
-                          icone: Icons.pin_drop_outlined,
-                          isSenha: false,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Por favor insira um endereço valido";
-                            }
-                            return null;
-                          },
-                          labelText: 'Endereço',
-                          hintText: 'Exemplo: R. Bom Pastor, 300',
-                        ),
-
-                        //Espaco
                         const SizedBox(
                           height: 25,
                         ),
@@ -366,20 +346,42 @@ class _RegisterPageState extends State<RegisterPage> {
 // Função entrar
   void registrar() {
     if (_formKey.currentState!.validate()) {
-      cleanControllers();
       enviarAPI();
+      cleanControllers();
     } else {
       print("Deu errado algo");
     }
   }
 
-  void enviarAPI() {}
+  void enviarAPI() {
+    final users = context.read<ModelA>();
+    users.createLoginUser(
+      nomeController.text,
+      emailController.text,
+      "",
+      passwordController.text,
+      celularController.text,
+    );
+    // users.criarUsuario(
+    //   nomeController.text,
+    //   emailController.text,
+    //   celularSoNumero,
+    //   passwordController.text,
+    // );
+    // print(users.usuarios);
+    // users.zerarUsuarios();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: ((context) => const MainPage()),
+      ),
+    );
+  }
 
   void cleanControllers() {
     nomeController.text = '';
     emailController.text = '';
     celularController.text = '';
-    enderecoController.text = '';
     passwordController.text = '';
     passwordConfirmController.text = '';
   }
