@@ -16,14 +16,8 @@ class ModelA extends ChangeNotifier {
   bool _expand = false;
   bool get expand => _expand;
 
-  final List<Map<String, dynamic>> _usuarios = [
-    {
-      // 'nome': 'd',
-      // 'email': 'd',
-      // 'celular': 'd',
-      // 'organizacao': 'd',
-    }
-  ];
+  final List<Map<String, dynamic>> _usuarios = [];
+
   List<Map<String, dynamic>> get usuarios => _usuarios;
 
   Future<Map<String, dynamic>> loginUser(

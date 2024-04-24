@@ -40,7 +40,7 @@ class _PerfilPageState extends State<PerfilPage> {
     // Initialize the TextEditingControllers with the initial values
     nomeController = TextEditingController(text: nome);
     emailController = TextEditingController(text: email);
-    celularController = TextEditingController(text: celularMaskInicial);
+    celularController = TextEditingController(text: celular);
     organizacaoController = TextEditingController(text: organizacao);
   }
 
